@@ -2,11 +2,11 @@ terraform {
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
-      version = "3.0.2"
+      version = "~>3.0.2"
+    }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~>4.7.1"
     }
   }
-}
-
-resource "docker_image" "jellyfin" {
-  name = "lscr.io/linuxserver/jellyfin:latest"
 }
