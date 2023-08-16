@@ -1,6 +1,19 @@
 locals {
   cloudflare_tunnel_secret = base64encode(random_string.cloudflare_tunnel_secret.result)
   url                      = "https://${var.subdomain}.${var.domain_name}"
+
+  #Format NFS options
+  nfs_o_opts = var.mediaserver_nfs_options == "" ? "" : concat(",", "var.mediaserver_nfs_options") # If not blank, add a delimier for formatting
+  nfs_o      = "addr=${var.mediaserver_nfs_address}${local.nfs_o_opts}"
+
+  #Format CIFS options
+  cifs_o      = "username=${var.mediaserver_cifs_username},password=${var.mediaserver_cifs_password},addr=${var.mediaserver_cifs_hostname}"
+  cifs_device = "//${var.mediaserver_cifs_hostname}/${var.mediaserver_cifs_path}"
+
+  #Pass value if media source is enabled
+  volume_type   = coalesce(var.mediaserver_cifs_enabled ? "cifs" : "", var.mediaserver_nfs_enabled ? "nfs" : "")
+  volume_device = coalesce(var.mediaserver_cifs_enabled ? local.cifs_device : "", var.mediaserver_nfs_enabled ? var.mediaserver_nfs_device : "")
+  volume_o =      coalesce(var.mediaserver_cifs_enabled ? local.nfs_o : "", var.mediaserver_nfs_enabled ? local.nfs_o : "")
 }
 
 
@@ -67,13 +80,14 @@ resource "docker_volume" "data" {
   name = "jellyfin_data"
 }
 
-#Media Server
+#Content Library
 resource "docker_volume" "media" {
   name = "jellyfin_media"
+
   driver_opts = {
     type   = "cifs"
-    device = var.mediaserver_path
-    o      = "username=${var.mediaserver_username},password=${var.mediaserver_password},addr=${var.mediaserver_hostname}"
+    device = var.mediaserver_cifs_path
+    o      = local.cifs_o
   }
 }
 
@@ -123,7 +137,7 @@ locals {
   jellyfin_fqdn = "${var.subdomain}.${var.domain_name}"
 }
 
-resource "cloudflare_tunnel_config" "example_config" {
+resource "cloudflare_tunnel_config" "jellyfin" {
   account_id = var.cloudflare_account_id
   tunnel_id  = cloudflare_tunnel.docker.id
 
@@ -131,9 +145,6 @@ resource "cloudflare_tunnel_config" "example_config" {
     ingress_rule {
       hostname = local.jellyfin_fqdn
       service  = "http://host.docker.internal:${var.jellyfin_port}"
-    }
-    ingress_rule {
-      service = "http://8.8.8.8:8080" #catch all null route
     }
   }
 }
