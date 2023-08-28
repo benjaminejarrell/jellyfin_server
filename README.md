@@ -1,7 +1,8 @@
 ### Jellyfin Server
 Set's up a publicly accessible [Jellyfin](https://jellyfin.org/) server behind a Cloudflare Zero Trust [Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
 
-Note that Cloudflare doesn't like pushing too much media over it's network. Don't use the free plan for commercial use or you may have your account closed.
+Cloudflare doesn't like pushing too much media over its network. 
+Don't use the free plan for commercial use or you may have your account closed.
 
 
 <!-- BEGIN_TF_DOCS -->
