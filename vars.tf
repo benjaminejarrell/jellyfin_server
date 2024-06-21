@@ -1,7 +1,23 @@
+#########################################
+# Docker
+#########################################
+
 variable "docker_host" {
   type        = string
   default     = "unix:///var/run/docker.sock"
-  description = "Docker management socker"
+  description = "Docker management socket"
+}
+
+variable "docker_jellyfin_image" {
+  type = string
+  default = "lscr.io/linuxserver/jellyfin:latest"
+  description = "Jellyfin Docker Image"
+}
+
+variable "docker_cloudflared_image" {
+  type = string
+  default = "cloudflare/cloudflared:latest"
+  description = "Cloudflared Docker Image"
 }
 
 #########################################

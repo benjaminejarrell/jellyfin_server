@@ -26,11 +26,11 @@ provider "docker" {
 }
 
 resource "docker_image" "jellyfin" {
-  name = "lscr.io/linuxserver/jellyfin:latest"
+  name = var.docker_jellyfin_image
 }
 
 resource "docker_image" "cloudflared" {
-  name = "cloudflare/cloudflared:latest"
+  name = var.docker_cloudflared_image
 }
 
 #########################################
