@@ -48,7 +48,9 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudflare_account_id"></a> [cloudflare\_account\_id](#input\_cloudflare\_account\_id) | Cloudflare account ID | `string` | n/a | yes |
 | <a name="input_cloudflare_api_token"></a> [cloudflare\_api\_token](#input\_cloudflare\_api\_token) | API Token for authenticating to Cloudflare | `string` | n/a | yes |
-| <a name="input_docker_host"></a> [docker\_host](#input\_docker\_host) | Docker management socker | `string` | `"unix:///var/run/docker.sock"` | no |
+| <a name="input_docker_cloudflared_image"></a> [docker\_cloudflared\_image](#input\_docker\_cloudflared\_image) | Cloudflared Docker Image | `string` | `"cloudflare/cloudflared:latest"` | no |
+| <a name="input_docker_host"></a> [docker\_host](#input\_docker\_host) | Docker management socket | `string` | `"unix:///var/run/docker.sock"` | no |
+| <a name="input_docker_jellyfin_image"></a> [docker\_jellyfin\_image](#input\_docker\_jellyfin\_image) | Jellyfin Docker Image | `string` | `"lscr.io/linuxserver/jellyfin:latest"` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain name for hosting Jellyfin | `string` | n/a | yes |
 | <a name="input_jellyfin_port"></a> [jellyfin\_port](#input\_jellyfin\_port) | Internal facing Jellyfin port | `string` | `"8096"` | no |
 | <a name="input_jellyfin_timezone"></a> [jellyfin\_timezone](#input\_jellyfin\_timezone) | Jellyfin Timezone: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones | `string` | `"Etc/UTC"` | no |
