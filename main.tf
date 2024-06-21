@@ -9,11 +9,6 @@ locals {
   # Format CIFS options
   cifs_o      = "username=${var.mediaserver_cifs_username},password=${var.mediaserver_cifs_password},addr=${var.mediaserver_cifs_hostname}"
   cifs_device = "//${var.mediaserver_cifs_hostname}/${var.mediaserver_cifs_path}"
-
-  # Pass value if media source is enabled
-  volume_type   = coalesce(var.mediaserver_cifs_enabled ? "cifs" : "", var.mediaserver_nfs_enabled ? "nfs" : "")
-  volume_device = coalesce(var.mediaserver_cifs_enabled ? local.cifs_device : "", var.mediaserver_nfs_enabled ? var.mediaserver_nfs_device : "")
-  volume_o      = coalesce(var.mediaserver_cifs_enabled ? local.nfs_o : "", var.mediaserver_nfs_enabled ? local.nfs_o : "")
 }
 
 
@@ -81,14 +76,21 @@ resource "docker_volume" "data" {
   name = "jellyfin_data"
 }
 
+locals {
+  # Format driver_opts
+  volume_type   = coalesce(var.mediaserver_cifs_enabled ? "cifs" : "", var.mediaserver_nfs_enabled ? "nfs" : "")
+  volume_device = coalesce(var.mediaserver_cifs_enabled ? local.cifs_device : "", var.mediaserver_nfs_enabled ? var.mediaserver_nfs_device : "")
+  volume_o      = coalesce(var.mediaserver_cifs_enabled ? local.nfs_o : "", var.mediaserver_nfs_enabled ? local.nfs_o : "")
+}
+
 # Content Library
 resource "docker_volume" "media" {
   name = "jellyfin_media"
 
   driver_opts = {
-    type   = "cifs"
-    device = var.mediaserver_cifs_path
-    o      = local.cifs_o
+    type   = local.volume_type
+    device = local.volume_type
+    o      = local.volume_o
   }
 }
 
