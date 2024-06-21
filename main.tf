@@ -60,13 +60,13 @@ resource "docker_container" "jellyfin" {
   }
 
   # Media
-  dynamic volumes {
+  dynamic "volumes" {
     for_each = var.mediaserver_paths
 
     content {
       container_path = volumes.value
       volume_name    = docker_volume.media.name
-      
+
     }
   }
 }
