@@ -10,16 +10,16 @@ Don't use the free plan for commercial use or you may have your account closed.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~>4.7.1 |
+| <a name="requirement_cloudflare"></a> [cloudflare](#requirement\_cloudflare) | ~>4.0 |
 | <a name="requirement_docker"></a> [docker](#requirement\_docker) | ~>3.0.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | 4.7.1 |
-| <a name="provider_docker"></a> [docker](#provider\_docker) | 3.0.2 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
+| <a name="provider_cloudflare"></a> [cloudflare](#provider\_cloudflare) | ~>4.0 |
+| <a name="provider_docker"></a> [docker](#provider\_docker) | ~>3.0.2 |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -62,6 +62,7 @@ No modules.
 | <a name="input_mediaserver_nfs_enabled"></a> [mediaserver\_nfs\_enabled](#input\_mediaserver\_nfs\_enabled) | Mount an NFS media server on Jellyfin. If this is enabled, mediaserver\_nfs* must be configured | `bool` | `false` | no |
 | <a name="input_mediaserver_nfs_options"></a> [mediaserver\_nfs\_options](#input\_mediaserver\_nfs\_options) | Additional NFS options, comma delmited. | `string` | `""` | no |
 | <a name="input_mediaserver_nfs_path"></a> [mediaserver\_nfs\_path](#input\_mediaserver\_nfs\_path) | n/a | `string` | `""` | no |
+| <a name="input_mediaserver_paths"></a> [mediaserver\_paths](#input\_mediaserver\_paths) | List of directories on your media server where your content is hosted. | `list(string)` | <pre>[<br>  "/data/tvshows",<br>  "/data/movies"<br>]</pre> | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain for hosting Jellyfin | `string` | `"jellyfin"` | no |
 
 ## Outputs
