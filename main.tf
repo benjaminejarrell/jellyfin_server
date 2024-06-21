@@ -2,18 +2,18 @@ locals {
   cloudflare_tunnel_secret = base64encode(random_string.cloudflare_tunnel_secret.result)
   url                      = "https://${var.subdomain}.${var.domain_name}"
 
-  #Format NFS options
+  # Format NFS options
   nfs_o_opts = var.mediaserver_nfs_options == "" ? "" : concat(",", "var.mediaserver_nfs_options") # If not blank, add a delimier for formatting
   nfs_o      = "addr=${var.mediaserver_nfs_address}${local.nfs_o_opts}"
 
-  #Format CIFS options
+  # Format CIFS options
   cifs_o      = "username=${var.mediaserver_cifs_username},password=${var.mediaserver_cifs_password},addr=${var.mediaserver_cifs_hostname}"
   cifs_device = "//${var.mediaserver_cifs_hostname}/${var.mediaserver_cifs_path}"
 
-  #Pass value if media source is enabled
+  # Pass value if media source is enabled
   volume_type   = coalesce(var.mediaserver_cifs_enabled ? "cifs" : "", var.mediaserver_nfs_enabled ? "nfs" : "")
   volume_device = coalesce(var.mediaserver_cifs_enabled ? local.cifs_device : "", var.mediaserver_nfs_enabled ? var.mediaserver_nfs_device : "")
-  volume_o =      coalesce(var.mediaserver_cifs_enabled ? local.nfs_o : "", var.mediaserver_nfs_enabled ? local.nfs_o : "")
+  volume_o      = coalesce(var.mediaserver_cifs_enabled ? local.nfs_o : "", var.mediaserver_nfs_enabled ? local.nfs_o : "")
 }
 
 
@@ -58,29 +58,30 @@ resource "docker_container" "jellyfin" {
     "TZ=${var.jellyfin_timezone}"
   ]
 
-
+  # Config
   volumes {
     container_path = "/config"
     volume_name    = docker_volume.data.name
   }
 
-  volumes {
-    container_path = "/data/tvshows"
-    volume_name    = docker_volume.media.name
-  }
+  # Media
+  dynamic volumes {
+    for_each = var.mediaserver_paths
 
-  volumes {
-    container_path = "/data/movies"
-    volume_name    = docker_volume.media.name
+    content {
+      container_path = volumes.value
+      volume_name    = docker_volume.media.name
+      
+    }
   }
 }
 
-#Local data storage
+# Local data storage
 resource "docker_volume" "data" {
   name = "jellyfin_data"
 }
 
-#Content Library
+# Content Library
 resource "docker_volume" "media" {
   name = "jellyfin_media"
 
@@ -101,14 +102,14 @@ resource "docker_container" "cloudflared" {
   name    = "Cloudflared"
   restart = "unless-stopped"
 
-  command = ["tunnel", "run"] #Pass "tunnel run" to the startup command
+  command = ["tunnel", "run"] # Pass "tunnel run" to the startup command
 
   env = [
-    "TUNNEL_TOKEN=${cloudflare_tunnel.docker.tunnel_token}" #Token used to auth with Cloudflare
+    "TUNNEL_TOKEN=${cloudflare_tunnel.docker.tunnel_token}" # Token used to auth with Cloudflare
   ]
 
 
-  depends_on = [cloudflare_tunnel.docker] #Make sure we create the tunnel in Cloudflare first
+  depends_on = [cloudflare_tunnel.docker] # Make sure we create the tunnel in Cloudflare first
 }
 
 #########################################
