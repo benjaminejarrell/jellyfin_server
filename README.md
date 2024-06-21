@@ -67,5 +67,9 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_URL"></a> [URL](#output\_URL) | User accessible URL of the media server |
+| <a name="output_cloudflared_container_ID"></a> [cloudflared\_container\_ID](#output\_cloudflared\_container\_ID) | ID of the Cloudflared Docker Container |
+| <a name="output_jellyfin_container_ID"></a> [jellyfin\_container\_ID](#output\_jellyfin\_container\_ID) | ID of the Jellyfin Docker container |
 <!-- END_TF_DOCS -->
